@@ -21,9 +21,13 @@ Changelog
 
 Release 1.7
 	Fixed bug in board directories that would cause compile to fail if CONFIG_SPI=n
+
 	Fixed bug in board directories that prevented antenna from being configured correctly.
+
 	Fixed bug in board directories that prevented SPI and Grove select from being configured correctly.
+
 	Fixed bug in LED library that caused build failures.
+
 	Updated ADP536 driver for v1.4.0 compatibility.
 
 
