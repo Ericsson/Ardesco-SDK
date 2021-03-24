@@ -35,7 +35,7 @@ static int ard_ns_magpio_configure(void)
 	int buffer;
 	uint8_t read_buffer[AT_CMD_MAX_READ_LENGTH];
 
-	at_socket_fd = socket(AF_LTE, 0, NPROTO_AT);
+	at_socket_fd = socket(AF_LTE, SOCK_DGRAM, NPROTO_AT);
 	if (at_socket_fd == -1) {
 		LOG_ERR("AT socket could not be opened");
 		return -EFAULT;
@@ -154,7 +154,7 @@ static int ard_ns_board_init(const struct device *dev)
 	err = ard_ns_magpio_configure();
 	if (err) {
 		LOG_ERR("ard_magpio_configure failed with error: %d", err);
-		return err;
+		// Don't return here. We need to configure the items below.
 	}
 
 	gpio_out_dev = device_get_binding(BOARD_NS_GPIO_0_DEV_NAME);
@@ -176,6 +176,7 @@ static int ard_ns_board_init(const struct device *dev)
 	}
 	return 0;
 }
+#if defined(CONFIG_SPI)
 
 #define SPI_CS_CNT 			 	DT_PROP_LEN(DT_NODELABEL(spi3),cs_gpios)
 #define SPI_CS_PIN(x)   		DT_PHA_BY_IDX(DT_NODELABEL(spi3),cs_gpios,x,pin)
@@ -217,6 +218,8 @@ static int ard_ns_spi_init(const struct device *dev)
 	return ret;
 }
 
+SYS_INIT(ard_ns_spi_init, POST_KERNEL, CONFIG_SPI_INIT_PRIORITY);
+#endif
+
 SYS_INIT(ard_ns_board_init, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);
 
-SYS_INIT(ard_ns_spi_init, POST_KERNEL, CONFIG_SPI_INIT_PRIORITY);

@@ -13,7 +13,7 @@ extern "C" {
 
 // Check that we're being used in the right place.
 #ifndef CONFIG_SOC_NRF52840
-#error usb_uart should only be included with 52840 applications.
+#error serial_52lib.h should only be included with 52840 applications.
 #endif
 
 /* Heap block space is always one of 2^(2n) for n from 3 to 7.

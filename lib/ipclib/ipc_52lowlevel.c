@@ -290,7 +290,7 @@ int ipc_lowlevel_init (coproc_recv_cb cb)
 
 	fStopComms = false;
 
-	// Init hte serial library of no one else has.
+	// Init the serial library of no one else has.
 	serial_lib_init();
 
 	// Save the callback func

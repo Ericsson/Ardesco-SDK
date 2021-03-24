@@ -71,9 +71,9 @@ void led_set_color(int color)
     {
         return;
     }
-    WRT_GPIO(gpio_out_dev, LED_RED, led_seq[color].red);
-    WRT_GPIO(gpio_out_dev, LED_GREEN, led_seq[color].green);
-    WRT_GPIO(gpio_out_dev, LED_BLUE, led_seq[color].blue);
+    WRT_GPIO(gpio_out_dev, LED_R, led_seq[color].red);
+    WRT_GPIO(gpio_out_dev, LED_G, led_seq[color].green);
+    WRT_GPIO(gpio_out_dev, LED_B, led_seq[color].blue);
 }
 
 /*
@@ -89,8 +89,8 @@ int led_init(void)
     {
         return -1;
     }
-    gpio_pin_configure(gpio_out_dev, LED_RED, ARD_GPIO_OUT_ACTLOW);
-    gpio_pin_configure(gpio_out_dev, LED_GREEN, ARD_GPIO_OUT_ACTLOW);
-    gpio_pin_configure(gpio_out_dev, LED_BLUE, ARD_GPIO_OUT_ACTLOW);
+    gpio_pin_configure(gpio_out_dev, LED_R, ARD_GPIO_OUT_ACTLOW);
+    gpio_pin_configure(gpio_out_dev, LED_G, ARD_GPIO_OUT_ACTLOW);
+    gpio_pin_configure(gpio_out_dev, LED_B, ARD_GPIO_OUT_ACTLOW);
     return 0;
 }

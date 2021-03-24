@@ -29,7 +29,8 @@ extern "C" {
 #else
 #define ARD_GPIO_OUT_ACTLOW  (GPIO_OUTPUT | GPIO_ACTIVE_LOW)
 #define ARD_GPIO_OUT_ACTHI   (GPIO_OUTPUT | GPIO_ACTIVE_HIGH)
-#define WRT_GPIO(a,b,c)      gpio_pin_set(a,b,c!=0)
+//#define WRT_GPIO(a,b,c)      gpio_pin_set(a,b,c!=0)
+#define WRT_GPIO(a,b,c)      gpio_pin_set_raw(a,b,c)
 #endif
 
 
@@ -40,7 +41,7 @@ extern "C" {
  * first 4 are used as a HW flow controlled UART.
  * The remaining 4 can be used as another UART, if
  * defined in an overlay file for both sides, or
- * as descrete GPIOs
+ * as discrete GPIOs
  * 
  * TODO: Define these from the DTS compiled result.
  * 

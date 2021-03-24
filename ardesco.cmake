@@ -17,7 +17,7 @@ endif()
 
 # These version numbers must match the release version
 set (ARDESCO_SDK_VERSION_MAJOR "1")
-set (ARDESCO_SDK_VERSION_MINOR "6")
+set (ARDESCO_SDK_VERSION_MINOR "7")
 set (ARDESCO_SDK_VERSION_PATCH "0")
 
 #

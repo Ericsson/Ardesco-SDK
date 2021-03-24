@@ -35,7 +35,14 @@ static int ard_ns_magpio_configure(void)
 	int buffer;
 	uint8_t read_buffer[AT_CMD_MAX_READ_LENGTH];
 
-	at_socket_fd = socket(AF_LTE, 0, NPROTO_AT);
+	if (!IS_ENABLED(CONFIG_BSD_LIBRARY_SYS_INIT)) {
+		LOG_INF("BSDlib is not yet initialized, AT commands not sent");
+		LOG_INF("Configuration of MAGPIO and COEX0 is left to drivers");
+		return 0;
+	}
+
+	at_socket_fd = socket(AF_LTE, SOCK_DGRAM, NPROTO_AT);
+	//at_socket_fd = socket(AF_LTE, 0, NPROTO_AT);
 	if (at_socket_fd == -1) {
 		LOG_ERR("AT socket could not be opened");
 		return -EFAULT;
@@ -117,6 +124,7 @@ static int ard_ns_sim_ctrl_init(const struct device *dev)
 
 #define BOARD_NS_GROVE_SELECT_PIN 10
 #define BOARD_NS_SEL_GROVEDIGITAL 1
+
 /*
  * ard_ns_grove_ctrl_init - Configure the GPIO for the Grove Conn A/D select
  */ 
@@ -150,11 +158,10 @@ static int ard_ns_board_init(const struct device *dev)
 {
 	int err;
 	const struct device *gpio_out_dev;
-
 	err = ard_ns_magpio_configure();
 	if (err) {
 		LOG_ERR("ard_magpio_configure failed with error: %d", err);
-		return err;
+		// Don't return here. We need to configure the items below.
 	}
 
 	gpio_out_dev = device_get_binding(BOARD_NS_GPIO_0_DEV_NAME);
@@ -166,16 +173,18 @@ static int ard_ns_board_init(const struct device *dev)
 	err = ard_ns_sim_ctrl_init(gpio_out_dev);
 	if (err) {
 		LOG_ERR("ard_ns_sim_ctrl_init failed with error: %d", err);
-		return err;
+		// return err;
 	}
 
 	err = ard_ns_grove_ctrl_init(gpio_out_dev);
 	if (err) {
 		LOG_ERR("ard_ns_grove_ctrl_init failed with error: %d", err);
-		return err;
+		// return err;
 	}
+
 	return 0;
 }
+#if defined(CONFIG_SPI)
 
 #define SPI_CS_CNT 			 	DT_PROP_LEN(DT_NODELABEL(spi3),cs_gpios)
 #define SPI_CS_PIN(x)   		DT_PHA_BY_IDX(DT_NODELABEL(spi3),cs_gpios,x,pin)
@@ -216,7 +225,9 @@ static int ard_ns_spi_init(const struct device *dev)
 
 	return ret;
 }
+SYS_INIT(ard_ns_spi_init, POST_KERNEL, CONFIG_SPI_INIT_PRIORITY);
+
+#endif
 
 SYS_INIT(ard_ns_board_init, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);
 
-SYS_INIT(ard_ns_spi_init, POST_KERNEL, CONFIG_SPI_INIT_PRIORITY);

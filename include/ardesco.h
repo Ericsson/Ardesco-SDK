@@ -10,6 +10,8 @@
 #include <sys/types.h>
 #include <zephyr/types.h>
 
+#include <back_compat.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

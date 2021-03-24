@@ -9,7 +9,7 @@ Usage
 	directory.
 
 	Modify the NCSDIR file in the Ardesco directory to select the proper
-	NCS SDK verison. (Default is v1.3.0.)
+	NCS SDK verison. (Default is v1.4.0.)
 
 	Open a command line build prompt using the ardcmdprompt.cmd command
 	file in the ardesco directory.
@@ -18,6 +18,14 @@ Usage
 	available on the Ardesco Teams page.
 
 Changelog
+
+Release 1.7
+	Fixed bug in board directories that would cause compile to fail if CONFIG_SPI=n
+	Fixed bug in board directories that prevented antenna from being configured correctly.
+	Fixed bug in board directories that prevented SPI and Grove select from being configured correctly.
+	Fixed bug in LED library that caused build failures.
+	Updated ADP536 driver for v1.4.0 compatibility.
+
 
 Release 1.6
 	Added board directories compatible to Nordic SDK 1.4. Set the target

@@ -71,7 +71,7 @@ int adp536x_init(const char *dev_name);
  * @retval 0 If the operation was successful.
  *           Otherwise, a (negative) error code is returned.
  */
-int adp536x_vbus_current_set(u8_t value);
+int adp536x_vbus_current_set(uint8_t value);
 
 /**
  * @brief Set the charger current.
@@ -81,7 +81,7 @@ int adp536x_vbus_current_set(u8_t value);
  * @retval 0 If the operation was successful.
  *           Otherwise, a (negative) error code is returned.
  */
-int adp536x_charger_current_set(u8_t value);
+int adp536x_charger_current_set(uint8_t value);
 
 /**
  * @brief Set the charger termination voltage.
@@ -94,7 +94,7 @@ int adp536x_charger_current_set(u8_t value);
  * @retval 0 If the operation was successful.
  *           Otherwise, a (negative) error code is returned.
  */
-int adp536x_charger_termination_voltage_set(u8_t value);
+int adp536x_charger_termination_voltage_set(uint8_t value);
 
 /**
  * @brief Enable charging.
@@ -114,7 +114,7 @@ int adp536x_charging_enable(bool enable);
  * @retval 0 If the operation was successful.
  *           Otherwise, a (negative) error code is returned.
  */
-int adp536x_charger_status_1_read(u8_t *buf);
+int adp536x_charger_status_1_read(uint8_t *buf);
 
 /**
  * @brief Read the STATUS2 register.
@@ -124,7 +124,7 @@ int adp536x_charger_status_1_read(u8_t *buf);
  * @retval 0 If the operation was successful.
  *           Otherwise, a (negative) error code is returned.
  */
-int adp536x_charger_status_2_read(u8_t *buf);
+int adp536x_charger_status_2_read(uint8_t *buf);
 
 /**
  * @brief Read the BAT_SOC register.
@@ -134,7 +134,7 @@ int adp536x_charger_status_2_read(u8_t *buf);
  * @retval 0 If the operation was successful.
  *           Otherwise, a (negative) error code is returned.
  */
-int adp536x_bat_soc_read(u8_t *buf);
+int adp536x_bat_soc_read(uint8_t *buf);
 
 /**
  * @brief Enable charge hiccup protection mode.
@@ -198,7 +198,7 @@ int adp536x_factory_reset(void);
  * @retval 0 If the operation was successful.
  *           Otherwise, a (negative) error code is returned.
  */
-int adp536x_oc_chg_current_set(u8_t value);
+int adp536x_oc_chg_current_set(uint8_t value);
 
 /**
  * @brief Set the buck discharge resistor status.
@@ -214,7 +214,7 @@ int adp536x_buck_discharge_set(bool enable);
  * @retval 0 If the operation was successful.
  *           Otherwise, a (negative) error code is returned.
  */
-int adp536x_bat_cap_set(u8_t value);
+int adp536x_bat_cap_set(uint8_t value);
 
 
 /**
@@ -225,7 +225,7 @@ int adp536x_bat_cap_set(u8_t value);
  * @retval 0 If the operation was successful.
  *           Otherwise, a (negative) error code is returned.
  */
-int adp536x_fuel_gauge_set(bool enable, u8_t *curve);
+int adp536x_fuel_gauge_set(bool enable, uint8_t *curve);
 
 /**
  * @brief Enable the fuel gauge sleep mode.
@@ -250,6 +250,6 @@ int adp536x_fuel_gauge_enable_sleep_mode(bool enable);
  * @retval 0 If the operation was successful.
  *           Otherwise, a (negative) error code is returned.
  */
-int adp536x_fuel_gauge_update_rate_set(u8_t rate);
+int adp536x_fuel_gauge_update_rate_set(uint8_t rate);
 
 #endif /* ADP536X_H_ */

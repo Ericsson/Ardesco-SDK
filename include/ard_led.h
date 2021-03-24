@@ -19,8 +19,8 @@ extern "C" {
 #define LED_G DT_GPIO_LEDS_LED_3_GPIOS_PIN
 #else
 #define LED_R DT_N_S_leds_S_led_1_P_gpios_IDX_0_VAL_pin
-#define LED_B DT_N_S_leds_S_led_2_P_gpios_IDX_0_VAL_pin
-#define LED_G DT_N_S_leds_S_led_3_P_gpios_IDX_0_VAL_pin
+#define LED_G DT_N_S_leds_S_led_2_P_gpios_IDX_0_VAL_pin
+#define LED_B DT_N_S_leds_S_led_3_P_gpios_IDX_0_VAL_pin
 #endif
 
 
