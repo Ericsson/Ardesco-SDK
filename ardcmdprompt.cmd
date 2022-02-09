@@ -9,6 +9,16 @@ set ARDESCO_ROOT=%ARDESCO_ROOT:~0,-1%
 echo Ardesco Root: %ARDESCO_ROOT%
 
 rem
+rem See if user put version in cmd line args
+rem
+if .%1==. goto noarg
+set ncsver=%1
+set envcmd=%ARDESCO_ROOT%\%ncsver%\toolchain\cmd\env.cmd
+echo ncsver set to %ncsver%
+goto callcmdfile
+
+:noarg
+rem
 rem See if ZEPHYR_BASE set. If so, use it.
 rem
 if .%ZEPHYR_BASE%==. goto nozb

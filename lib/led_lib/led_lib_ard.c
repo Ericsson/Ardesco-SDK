@@ -18,6 +18,7 @@ typedef struct
 
 static led_state led_seq[] = 
 {
+    {0,0,0},    /* OFF     */
     {1,0,0},    /* Red     */
     {0,0,1},    /* Green   */
     {0,1,0},    /* Blue    */
@@ -25,8 +26,6 @@ static led_state led_seq[] =
     {1,1,0},    /* Magenta */
     {0,1,1},    /* Cyan    */
     {1,1,1},    /* White   */
-    {0,0,0},    /* OFF     */
- 
 };
 
 #if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)

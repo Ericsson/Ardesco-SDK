@@ -9,7 +9,7 @@ Usage
 	directory.
 
 	Modify the NCSDIR file in the Ardesco directory to select the proper
-	NCS SDK verison. (Default is v1.4.0.)
+	NCS SDK verison. (Default is v1.8.0.)
 
 	Open a command line build prompt using the ardcmdprompt.cmd command
 	file in the ardesco directory.
@@ -17,7 +17,38 @@ Usage
 	For detailed instructions, refer to "Getting Started with the Ardesco SDK"
 	available on the Ardesco Teams page.
 
+	Note: while the Ardesco libraries are written to be backward compatible,
+	the examples in the 'apps' folder are written to the latest supported 
+	Nordic Connect SDK.
+
 Changelog
+
+Release 1.9
+	Added support for Nordic SDK 1.6.1, 1.7.0 and 1.8.0
+
+	Added button_lib and buzzer_lib for additional UI support
+
+	Updated usb_uart_52lib and sensor_lib related to v1.7.0 and v1.8.0 compatibilty.
+
+	Modified Hello_52840 example to be compatible with v1.8.0
+
+	Modified LTE_connect example given rename of BSD_LIB to NRF_MODEM_LIB
+
+	Updated Bluetooth applications to be compatible with v1.8.0
+
+	Set target NCS version to v1.8.0
+
+
+Release 1.8
+	Added support for Nordic SDK 1.5 and 1.5.1
+
+	Added example LTE_connect to demonstrate connecting with LTE
+
+	Added example bluetooth_beacon_scan for the 9160 and bluetooth_52app on the 52840 
+	to demonstrate using 52840 bluetooth functionality from the 9160.
+
+	Fixed bugs in serial_52 lib and usb_uart_52lib related to v1.4.0 compatibilty.
+
 
 Release 1.7
 	Fixed bug in board directories that would cause compile to fail if CONFIG_SPI=n

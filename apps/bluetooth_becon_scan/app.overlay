@@ -1,0 +1,54 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+
+/* This tells the bluetooth driver code to */
+/* use the lpuart driver as it's communication. */
+/ {
+	chosen {
+		zephyr,bt-uart=&lpuart;
+	};
+};
+
+/* Disable cts and rts */
+/* App uses the rts-pin (cts on 52840) for */
+/* 52840 reset control.*/
+&uart0 {
+	/delete-property/ rts-pin;
+	/delete-property/ cts-pin;
+};
+
+/* redirect debug/console out the Grove Connector */
+/* DISABLED. Kept in here bc handy when debugging 
+&uart0 {
+	current-speed = <115200>;
+	status = "okay";
+	tx-pin = <13>;
+	rx-pin = <14>;
+	/delete-property/ rts-pin;
+	/delete-property/ cts-pin;
+};
+*/
+
+/* Nordic Low Power UART driver for comms to 52840 */
+/* Mapped to MCU 4-7 */
+&uart1 {
+	current-speed = <1000000>;
+	status = "okay";
+	tx-pin = <22>;
+	rx-pin = <23>;
+	/delete-property/ rts-pin;
+	/delete-property/ cts-pin;
+	/delete-property/ hw-flow-control;
+
+	lpuart: nrf-sw-lpuart {
+		compatible = "nordic,nrf-sw-lpuart";
+		status = "okay";
+		label = "LPUART";
+		req-pin = <24>;
+		rdy-pin = <25>;
+	};
+};
+
+/* Required to use Nordic Low Power UART driver */
+&gpiote {
+	interrupts = <49 NRF_DEFAULT_IRQ_PRIORITY>;
+};

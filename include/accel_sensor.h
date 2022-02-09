@@ -9,7 +9,6 @@
 extern "C" {
 #endif
 
-
 #include <zephyr/types.h>
 #include "sensor_common.h"
 
@@ -32,11 +31,23 @@ struct accelsetcbstruct {
     uint32_t userdata;
 };
 
+
+typedef int (*ardaccel_event_cb_t)(uint32_t btn, bool btn_pressed, void *user_data);
+
+struct accel_callback {
+    void *reserved;
+    void *user_data;
+    ardaccel_event_cb_t fn;
+};
+
+
 void *ardaccel_init(int *prc, char *driver_name);
 //void *ardaccel_init(int *prc);
 int ardaccel_deinit(void *h);
 int ardaccel_read (void *h, void *pData, int nSize);
 int ardaccel_configure(void *h, unsigned int Func, void *pData, uint32_t *pnSize);
+
+int ardaccel_set_trig_callback(void *h, unsigned int Func, void *pData, uint32_t *pnSize);
 
 #ifdef __cplusplus
 }

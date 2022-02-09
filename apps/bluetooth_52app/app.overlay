@@ -1,0 +1,52 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+
+/* This tells the HCI bluetooth code to */
+/* use the lpuart driver as it's input UART*/
+/ {
+	chosen {
+		zephyr,console = &cdc_acm_uart0;
+		zephyr,bt-c2h-uart=&lpuart;
+	};
+};
+
+/* Delete UART0  handshake lines for reuse.*/
+/* App uses the cts-pin (rts on 9160) for */
+/* 52840 reset control.*/
+&uart0 {
+	/delete-property/ rts-pin;
+	/delete-property/ cts-pin;
+};
+
+/* lpuart mapped to MCU 4-7  */
+&uart1 {
+	current-speed = <1000000>;
+	status = "okay";
+	tx-pin = <25>;
+	rx-pin = <32>;
+	/delete-property/ rts-pin;
+	/delete-property/ cts-pin;
+
+	lpuart: nrf-sw-lpuart {
+		compatible = "nordic,nrf-sw-lpuart";
+		status = "okay";
+		label = "LPUART";
+		req-pin = <22>;
+		rdy-pin = <19>;
+	};
+};
+/* Needed for LPUART */
+&gpiote {
+	interrupts = <6 NRF_DEFAULT_IRQ_PRIORITY>;
+};
+
+&zephyr_udc0 {
+	cdc_acm_uart0: cdc_acm_uart0 {
+		compatible = "zephyr,cdc-acm-uart";
+		label = "CDC_ACM_0";
+	};
+
+	cdc_acm_uart1 {
+		compatible = "zephyr,cdc-acm-uart";
+		label = "CDC_ACM_1";
+	};
+};

@@ -32,15 +32,21 @@ uint8_t USB_active = 1;
  */ 
 #if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)
 static void uart_interrupt_handler(void *user_data)
-#else
-static void uart_interrupt_handler(const struct device *dev, void *user_data)
-#endif
 {
 	struct serial_isr_info *isr_info = user_data;
 
 	isr_info->irq_fn (isr_info->user_data);
 	return;
 }
+#else
+static void uart_interrupt_handler(const struct device *dev, void *user_data)
+{
+	struct serial_isr_info *isr_info = user_data;
+
+	isr_info->irq_fn (dev, isr_info->user_data);
+	return;
+}
+#endif
 
 
 static K_THREAD_STACK_DEFINE(power_thread_stack, POWER_THREAD_STACKSIZE);
@@ -67,17 +73,37 @@ static void power_thread(void *p1, void *p2, void *p3)
 	}
 }
 static int usb_enabled = 0;
+
+enum usb_dc_status_code usb_stat = USB_DC_UNKNOWN;
+uint8_t usb_stat_param = 0;
+
+void usb_dc_status_cb (enum usb_dc_status_code cb_status,const uint8_t *param)
+{
+	usb_stat = cb_status;
+	if (param != 0)
+	{
+		usb_stat_param = *param;
+	}
+}
+
 /*
  * common_init_usb - coordinates multiple libraries that may
  * 'enable' the usb library.
  *
  */ 
-int common_init_usb ()
+int common_init_usb (const usb_dc_status_callback cb)
 {
 	int rc;
 	if (usb_enabled > 0)
 		return 0;
-	rc = usb_enable(NULL);
+	if (cb != 0)
+	{
+		rc = usb_enable(cb);
+	}
+	else
+	{
+		rc = usb_enable(&usb_dc_status_cb);
+	}
 	if (rc == 0)
 		usb_enabled++;
 	return rc;

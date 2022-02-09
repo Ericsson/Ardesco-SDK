@@ -6,6 +6,7 @@
 #define ARD_SERIAL_52LIB_H__
 
 #include <device.h>
+#include <usb\usb_device.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -36,7 +37,11 @@ struct uart_data {
 /*
  * Function prototype for custom ISR handler
  */ 
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)
 typedef void (*uart_isr_handler) (void *user_data);
+#else
+typedef void (*uart_isr_handler) (const struct device *dev, void *user_data);
+#endif
 
 /*
  * Structure to be declared in app that defines the callback
@@ -65,8 +70,10 @@ void serial_lib_register_isr (const struct device *dev, struct serial_isr_info *
 /*
  * Called to initialize the USB. This function can be called 
  * multiple times but will only initialize the USB once.
+ * The callback function will only be used on the inital
+ * call.
  */
-int common_init_usb ();
+int common_init_usb (const usb_dc_status_callback cb);
 
 #ifdef __cplusplus
 }

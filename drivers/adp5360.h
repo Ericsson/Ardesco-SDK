@@ -53,6 +53,40 @@
 #define ADP536X_OC_CHG_THRESHOLD_300mA	0x06
 #define ADP536X_OC_CHG_THRESHOLD_400mA	0x07
 
+
+/*  INTERRUPT_ENABLE1 register*/
+#define EN_SOCLOW_INT						BIT(7)
+#define EN_SOCACM_INT						BIT(6)
+#define EN_ADPICHG_INT						BIT(5)
+#define EN_BATPRO_INT						BIT(4)
+#define EN_THR_INT							BIT(3)
+#define EN_BAT_INT							BIT(2)
+#define EN_CHG_INT							BIT(1)
+#define EN_VBUS_INT							BIT(0)
+
+/*  INTERRUPT_ENABLE2 register*/
+#define EN_MR_INT							BIT(7)
+#define EN_WD_INT							BIT(6)
+#define EN_BUCKPG_INT						BIT(5)
+#define EN_BUCKBSTPG_INT					BIT(4)
+
+/*  INTERRUPT_FLAG1 register*/
+#define SOCLOW_INT							BIT(7)
+#define SOCACM_INT							BIT(6)
+#define ADPICHG_INT							BIT(5)
+#define BATPRO_INT							BIT(4)
+#define THR_INT								BIT(3)
+#define BAT_INT								BIT(2)
+#define CHG_INT								BIT(1)
+#define VBUS_INT							BIT(0)
+
+/*  INTERRUPT_FLAG2 register*/
+#define MR_INT								BIT(7)
+#define WD_INT								BIT(6)
+#define BUCKPG_INT							BIT(5)
+#define BUCKBSTPG_INT						BIT(4)
+
+
 /**
  * @brief Initialize ADP536X.
  *
@@ -251,5 +285,25 @@ int adp536x_fuel_gauge_enable_sleep_mode(bool enable);
  *           Otherwise, a (negative) error code is returned.
  */
 int adp536x_fuel_gauge_update_rate_set(uint8_t rate);
+
+/*
+ * @brief Enable selected interrupts.
+ */
+int adp536x_irq_enable(uint8_t reg1, uint8_t reg2);
+
+/*
+ * @brief Query status of interrupts.
+ */
+int adp536x_irq_status(uint8_t *reg1, uint8_t *reg2);
+
+/*
+ * @brief Acknowlege interrupts, reg1
+ */
+int adp536x_irq_ack1(uint8_t reg1);
+/*
+ * @brief Acknowlege interrupts, reg2
+ */
+int adp536x_irq_ack2(uint8_t reg2);
+
 
 #endif /* ADP536X_H_ */

@@ -32,6 +32,42 @@ extern "C" {
 #endif //CONFIG_BOARD_NRF9160_ARD0031ANS
 
 
+#ifdef CONFIG_SOC_NRF9160
+#define MCU_0_PIN        17  // UART_0 TX
+#define MCU_1_PIN        18  // UART_0 RX
+#define MCU_2_PIN        19  // UART_0 RTS
+#define MCU_3_PIN        20  // UART_0 CTS
+
+#define MCU_4_PIN        22
+#define MCU_5_PIN        23
+#define MCU_6_PIN        24
+#define MCU_7_PIN        25
+#endif // CONFIG_SOC_NRF9160
+
+// Note RX/TX and CTS/RTS are swapped from 9160 perspective.
+#ifdef CONFIG_SOC_NRF52840
+#define MCU_0_PIN        11  // UART_0 TX 
+#define MCU_1_PIN        15  // UART_0 RX
+#define MCU_2_PIN        20  // UART_0 RTS
+#define MCU_3_PIN        21  // UART_0 RTS
+
+#define MCU_4_PIN        32
+#define MCU_5_PIN        25
+#define MCU_6_PIN        19
+#define MCU_7_PIN        22
+#endif // CONFIG_SOC_NRF52840
+
+/* 
+ * Used by 9160 to select digital vs analog on Grove data pins
+ * on the Combi Dev.
+ * This is defined for the Combi as well to maintain sw compat.
+ */ 
+#if defined CONFIG_BOARD_NRF9160_ARD0021BNS || defined CONFIG_BOARD_NRF9160_ARD0022BNS
+#define BOARD_NS_GROVE_SELECT_PIN 10
+#define BOARD_NS_SEL_GROVEDIGITAL 1
+#endif //CONFIG_BOARD_NRF9160_ARD0021BNS || CONFIG_BOARD_NRF9160_ARD0022BNS
+
+
 //
 // The memory allcators/frees are dereferened here.
 // 1. Simple replacement if needed.

@@ -49,6 +49,12 @@
 #define ADP536X_BUCK_OUTPUT				0x2A
 #define ADP536X_BUCKBST_CFG				0x2B
 #define ADP536X_BUCKBST_OUTPUT				0x2C
+//(db) Add IRQ regs
+#define ADP536X_INTERRUPT_ENABLE1		0x32
+#define ADP536X_INTERRUPT_ENABLE2		0x33
+#define ADP536X_INTERRUPT_FLAG1			0x34
+#define ADP536X_INTERRUPT_FLAG2			0x35
+//(db) End if add IRQ regs
 #define ADP536X_DEFAULT_SET_REG				0x37
 
 /* Manufacturer and model ID register. */
@@ -181,6 +187,8 @@
 /* DEFAULT_SET register. */
 #define ADP536X_DEFAULT_SET_MSK				GENMASK(7, 0)
 #define ADP536X_DEFAULT_SET(x)				(((x) & 0xFF) << 0)
+
+/* Interrupt reg bits are defined in .h file so that callers can select the proper interrupts. */
 
 
 static const struct device *i2c_dev;
@@ -356,6 +364,49 @@ int adp536x_buckbst_enable(bool enable)
 					ADP536X_BUCKBST_CFG_EN_BUCKBST(enable));
 }
 
+int adp536x_irq_enable(uint8_t reg1, uint8_t reg2)
+{
+	int rc;
+	rc = adp536x_reg_write (ADP536X_INTERRUPT_ENABLE1, reg1);
+	if (rc == 0)
+	{
+		rc = adp536x_reg_write (ADP536X_INTERRUPT_ENABLE2, reg2);
+	}
+	return rc;
+}
+
+int adp536x_irq_enable_read(uint8_t *reg1, uint8_t *reg2)
+{
+	int rc;
+	rc = adp536x_reg_read (ADP536X_INTERRUPT_ENABLE1, reg1);
+	if (rc == 0)
+	{
+		rc = adp536x_reg_read (ADP536X_INTERRUPT_ENABLE2, reg2);
+	}
+	return rc;
+}
+
+int adp536x_irq_status(uint8_t *reg1, uint8_t *reg2)
+{
+	int rc;
+	rc = adp536x_reg_read (ADP536X_INTERRUPT_FLAG1, reg1);
+	if (rc == 0)
+	{
+		rc = adp536x_reg_read (ADP536X_INTERRUPT_FLAG2, reg2);
+	}
+	return rc;
+}
+
+int adp536x_irq_ack1(uint8_t reg1)
+{
+	return adp536x_reg_write (ADP536X_INTERRUPT_FLAG1, reg1);
+}
+
+int adp536x_irq_ack2(uint8_t reg2)
+{
+	return adp536x_reg_write (ADP536X_INTERRUPT_FLAG2, reg2);
+}
+
 static int adp536x_default_set(void)
 {
 	/* The value 0x7F has to be written to this register to accomplish
@@ -384,7 +435,7 @@ int adp536x_init(const char *dev_name)
 	int err = 0;
 
 	i2c_dev = device_get_binding(dev_name);
-	if (err) {
+	if (i2c_dev == 0) {
 		err = -ENODEV;
 	}
 

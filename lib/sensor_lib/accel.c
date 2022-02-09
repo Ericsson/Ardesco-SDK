@@ -38,6 +38,11 @@
             SENSOR_CHAN_ACCEL_Z     \
         }
 
+struct sensor_trigger sensor_trig = {
+    .type = SENSOR_TRIG_THRESHOLD,
+};
+
+
 int accl_channels[] = ACCEL_CHANNELS;
 struct sensor_value accl_raw_data[ARRAY_SIZE(accl_channels)];
 

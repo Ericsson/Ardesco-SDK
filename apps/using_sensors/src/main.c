@@ -7,6 +7,13 @@
 #include "accel_sensor.h"
 #include "env_sensor.h"
 
+// Needed in case someone uses this example and changes .prj settings.
+#ifdef CONFIG_NEWLIB_LIBC
+#ifndef CONFIG_NEWLIB_LIBC_FLOAT_PRINTF
+#error CONFIG_NEWLIB_LIBC_FLOAT_PRINTF must be set when using CONFIG_NEWLIB_LIBC
+#endif
+#endif
+
 //========================================================
 // Program Entry Point
 //========================================================

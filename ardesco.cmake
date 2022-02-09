@@ -17,7 +17,7 @@ endif()
 
 # These version numbers must match the release version
 set (ARDESCO_SDK_VERSION_MAJOR "1")
-set (ARDESCO_SDK_VERSION_MINOR "7")
+set (ARDESCO_SDK_VERSION_MINOR "8")
 set (ARDESCO_SDK_VERSION_PATCH "0")
 
 #
@@ -43,6 +43,8 @@ else()
         set(ARDESCO_ROOT ${CMAKE_CURRENT_LIST_DIR})
         set(ENV{ARDESCO_ROOT} ${ARDESCO_ROOT})
 endif()
+# Replicating as some devs may follow ZEPHYR_BASE and think ARDESCO_BASE
+        set(ENV{ARDESCO_BASE} ${ARDESCO_ROOT})
 
 #
 # ZEPHYR_BASE is important. If defined as environment variable, 
@@ -225,7 +227,7 @@ set(ARDESCO_DRIVER_DIR ${ARDESCO_ROOT}/drivers)
 if (EXISTS ${ARDESCO_ROOT}/${ARDEXT_DIR}/ardescoext.cmake)
 include(${ARDESCO_ROOT}/${ARDEXT_DIR}/ardescoext.cmake)
 else()
-message (STATUS "---------------------")
+message (STATUS "-----------------------")
 message(FATAL_ERROR "Ardesco Compat cmake file >${ARDESCO_ROOT}/${ARDEXT_DIR}/ardescoext.cmake< not found.")
 message (STATUS "-----------------------")
 endif()
@@ -240,6 +242,11 @@ zephyr_include_directories(${CMAKE_SOURCE_DIR}/src)
 zephyr_include_directories(${ARDESCO_ROOT})
 zephyr_include_directories(${ARDESCO_ROOT}/include)
 zephyr_include_directories(${ARDESCO_ROOT}/drivers)
+
+# Add ardesco driver directory. Individual drivers will be 
+# conditionally included by CONFIG vars.
+add_subdirectory(${ARDESCO_ROOT}/drivers ${CMAKE_BINARY_DIR}/drivers)
+
 
 # Include cmake file to set board string name
 include(${ARDESCO_ROOT}/cmake/board_def.cmake)

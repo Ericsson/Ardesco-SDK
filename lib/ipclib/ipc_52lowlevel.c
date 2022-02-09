@@ -33,7 +33,6 @@
 #define CONFIG_IPC_UART_DEV_NAME "UART_1"
 #endif //CONFIG_IPC_UART_DEV_NAME
 
-void disable_uart(int uartnum);
 int send_debug_out (char *dbgstr);
 
 static struct serial_isr_info ipc_isr_info[2];
@@ -86,7 +85,11 @@ static uint8_t buffer[UART_BUF_SIZE];
  * from the commin serial52 lib isr.
  * 
  */ 
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)
 static void ipc_interrupt_handler(void *user_data)
+#else
+static void ipc_interrupt_handler(const struct device *unused, void *user_data)
+#endif
 {
 	struct ipc_serial_dev *sd = user_data;
 #if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)
@@ -249,8 +252,13 @@ static void ipc52_monitor_thread(void *p1, void *p2, void *p3)
 		}
 		uart_irq_rx_disable(uart_ipc_dev);
 
-		device_set_power_state(uart_ipc_dev, DEVICE_PM_LOW_POWER_STATE, 
-	                           NULL, NULL);
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 6)
+		device_set_power_state(uart_ipc_dev, DEVICE_PM_LOW_POWER_STATE, NULL, NULL);
+#elif (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 7)
+		pm_device_state_set(uart_ipc_dev, DEVICE_PM_LOW_POWER_STATE, NULL, NULL);
+#else
+		pm_device_state_set(uart_ipc_dev, PM_DEVICE_STATE_LOW_POWER);
+#endif
 	}
 	in_call = 12345;
 
@@ -303,41 +311,4 @@ int ipc_lowlevel_init (coproc_recv_cb cb)
 	// Let it run
 	k_sleep(K_MSEC(10));
 	return 0;
-}
-
-#define UART52_0_PWR_REG   (*(volatile uint32_t *)0x40002FFC)
-#define UART52_1_PWR_REG   (*(volatile uint32_t *)0x40028000)
-/*
- * disable_uart - Code from Nordic to truly shut down
- * a nrf52 uart.
- */
-void disable_uart(int uartnum)
-{
-	if (uartnum == 0)
-	{
-		NRF_UARTE0->EVENTS_RXTO = 0;
-		NRF_UARTE0->TASKS_STOPRX = 1;
-		while(NRF_UARTE0->EVENTS_RXTO == 0){}
-		NRF_UARTE0->EVENTS_RXTO = 0;
-		NRF_UARTE0->ENABLE = 0;
-
-		//Workaround. Power cycle UART0
-		UART52_0_PWR_REG = 0;
-		UART52_0_PWR_REG;
-		UART52_0_PWR_REG = 1;
-	}
-	else if (uartnum == 1)
-	{
-		NRF_UARTE1->EVENTS_RXTO = 0;
-		NRF_UARTE1->TASKS_STOPRX = 1;
-		//(db)while(NRF_UARTE1->EVENTS_RXTO == 0){}
-		k_sleep(K_MSEC(10));
-		NRF_UARTE1->EVENTS_RXTO = 0;
-		NRF_UARTE1->ENABLE = 0;
-
-		//Workaround. Power cycle UART1
-		UART52_1_PWR_REG = 0;
-		UART52_1_PWR_REG;
-		UART52_1_PWR_REG = 1;
-	}
 }

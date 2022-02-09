@@ -51,7 +51,7 @@ void main(void)
 	while (1) 
 	{
 		//(db)
-		k_sleep(K_MSEC(60 * 1000));
+		k_sleep(K_SECONDS(60));
 		k_yield();
                 
 	}

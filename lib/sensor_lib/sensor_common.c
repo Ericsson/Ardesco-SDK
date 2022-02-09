@@ -19,7 +19,7 @@ struct senlib_struct {
     uint32_t idtag;
 #endif
     struct k_work trig_work;        // Driver trigger work structure*/
-    struct sensor_trigger trig;     // Trigger structure
+    struct sensor_trigger trig;     // Trigger structure    
     struct k_work timer_work;       // Timer period trigger work structure*/
     struct k_timer trigger_timer;   // Timer associated with a timer*/
 
@@ -121,13 +121,14 @@ struct senlib_struct *get_lib_struct (const struct device *dev, void *ptr, int t
 }
 
 /*
- *
+ * sensor_trigger_work_handler - Invoked from trigger handler so we can safely
+ * call other routines.
  */
 static void sensor_trigger_work_handler(struct k_work *work)
 {
     struct senlib_struct *lib = get_lib_struct (0, work, TRIGGER_WORK_STRUCT);
 
-    if (lib->fn)
+    if ((lib != 0) && (lib->fn != 0))
     {
         // Call upper layer.
         (lib->fn)(ARDCB_LIMITEXCEEDED, (void *)&lib->trig, sizeof (struct sensor_trigger), lib->userdata);
@@ -136,20 +137,24 @@ static void sensor_trigger_work_handler(struct k_work *work)
 }
 
 /*
- *
+ * sensor_trigger_handler - Callback when sensor driver triggers
  */
 #if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)
 static void sensor_trigger_handler(struct device *dev, struct sensor_trigger *trigger)
-#else
+#elif (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 8)
 static void sensor_trigger_handler(const struct device *dev, struct sensor_trigger *trigger)
+#else
+static void sensor_trigger_handler(const struct device *dev, const struct sensor_trigger *trigger)
 #endif
 {
 	ARG_UNUSED(dev);
 	ARG_UNUSED(trigger);
 
-    struct senlib_struct *lib = get_lib_struct (dev, trigger, TRIGGER_STRUCT);
-
-	k_work_submit(&lib->trig_work);
+    struct senlib_struct *lib = get_lib_struct (dev, (void *)trigger, TRIGGER_STRUCT);
+    if (lib != 0)
+    {
+	    k_work_submit(&lib->trig_work);
+    }
 }
 
 /*

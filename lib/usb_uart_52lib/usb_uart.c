@@ -25,9 +25,9 @@
 #endif //CONFIG_PASSTHROUGH_UART_DEV_NAME
 
 // fallback define for non-kconfig builds.
-#ifndef CONFIG_PASSTHROUGH_USB_DEV_NAME
-#define CONFIG_PASSTHROUGH_USB_DEV_NAME "CDC_ACM_0"
-#endif //CONFIG_PASSTHROUGH_USB_DEV_NAME
+//#ifndef CONFIG_PASSTHROUGH_USB_DEV_NAME
+#define CONFIG_PASSTHROUGH_USB_DEV_NAME "CDC_ACM_1"
+//#endif //CONFIG_PASSTHROUGH_USB_DEV_NAME
 
 
 // Indicates USB is connected.
@@ -51,7 +51,7 @@ static K_FIFO_DEFINE(usb_0_tx_fifo);
 static K_FIFO_DEFINE(uart_0_tx_fifo);
 
 // Structures used to provide isr forwarding info
-struct serial_isr_info isr_info[2];
+static struct serial_isr_info isr_info[2];
 
 // Structures used for usb to uart relay.
 static struct serial_dev devs[2];
@@ -102,7 +102,11 @@ static int oom_free(struct serial_dev *sd)
  * processes incoming strings from the 9160.
  * 
  */ 
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)
 static void uart_usb_passthrough_isr(void *user_data)
+#else
+static void uart_usb_passthrough_isr(const struct device *unused, void *user_data)
+#endif
 {
 	struct serial_dev *sd = user_data;
 #if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 4)
@@ -272,7 +276,7 @@ static void usb_uart_thread(void *p1, void *p2, void *p3)
 		serial_lib_register_isr (usb_passthru_dev, &isr_info[0]);
 		serial_lib_register_isr (uart_passthru_dev, &isr_info[1]);
 
-		ret = common_init_usb ();
+		ret = common_init_usb (NULL);
 		if (ret != 0) 
 		{
 			USB_active = 0;
@@ -328,13 +332,23 @@ static void usb_uart_thread(void *p1, void *p2, void *p3)
 
 	if (usb_passthru_dev)
 	{
-		device_set_power_state(usb_passthru_dev, DEVICE_PM_LOW_POWER_STATE, 
-		                       NULL, NULL);
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 6)
+		device_set_power_state(usb_passthru_dev, DEVICE_PM_ACTIVE_STATE, NULL, NULL);
+#elif (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 7)
+		pm_device_state_set(usb_passthru_dev, PM_DEVICE_STATE_ACTIVE, NULL, NULL);
+#else
+		pm_device_state_set(usb_passthru_dev, PM_DEVICE_STATE_ACTIVE);
+#endif
 	}	
 
 	if (uart_passthru_dev)
 	{
-		device_set_power_state(uart_passthru_dev, DEVICE_PM_LOW_POWER_STATE, 
-	                           NULL, NULL);
+#if (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 6)
+		device_set_power_state(uart_passthru_dev, DEVICE_PM_ACTIVE_STATE, NULL, NULL);
+#elif (NRF_VERSION_MAJOR == 1) && (NRF_VERSION_MINOR < 7)
+		pm_device_state_set(uart_passthru_dev, PM_DEVICE_STATE_ACTIVE, NULL, NULL);
+#else
+		pm_device_state_set(uart_passthru_dev, PM_DEVICE_STATE_ACTIVE);
+#endif
 	}
 }

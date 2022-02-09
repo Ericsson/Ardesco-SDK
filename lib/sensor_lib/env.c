@@ -95,13 +95,12 @@ int ardenv_read (void *h, void *pData, int nSize)
     if (nSize < sizeof(env_data_t)) 
     {
 		LOG_ERR("buffer to small in %s\n", __FUNCTION__);
-		printk ("buffer to small in %s\r\n", __FUNCTION__);
 		return -EINVAL;
     }
     // declare typed pointer to output buffer.
     data_size = senlib_readsensor(h, pData, nSize);
     if (data_size != nSize) {
-        printk ("Invalid data size %d. Expecting %d\r\n", nSize, data_size);
+        LOG_ERR ("Invalid data size %d. Expecting %d\r\n", nSize, data_size);
         rc = -EINVAL;
     }
     return rc;

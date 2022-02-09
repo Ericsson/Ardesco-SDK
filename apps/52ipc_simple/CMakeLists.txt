@@ -15,7 +15,7 @@ else()
    include(${CMAKE_CURRENT_SOURCE_DIR}/../../ardesco.cmake)
 endif()
 
-project(NONE)
+project(IPC52_Simple)
 
 target_sources(app PRIVATE src/main.c)
 

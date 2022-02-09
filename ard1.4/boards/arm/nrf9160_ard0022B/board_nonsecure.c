@@ -221,6 +221,10 @@ static int ard_ns_spi_init(const struct device *dev)
 		if (ret) {
 			LOG_ERR("Error configuring pin %d!", cs_gpios[i].pin);
 		}
+		ret = gpio_pin_set_raw(gpio_dev, cs_gpios[i].pin, 1);
+		if (ret) {
+			LOG_ERR("Error setting pin %d!", cs_gpios[i].pin);
+		}
 	}
 
 	return ret;

@@ -25,7 +25,7 @@ void main(void)
 	while (1) 
 	{
 		printk ("ping52\n");
-		k_sleep(K_MSEC(10 * 1000));
+		k_sleep(K_SECONDS(5));
 		//ipc_dbg_out("52Ping via 91");
 		ipc_get_coproc_ver(buf, _COUNTOF(buf));
 		printk ("9160 firmware version: %s\n", buf);

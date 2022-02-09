@@ -23,15 +23,14 @@ extern "C" {
 #define LED_B DT_N_S_leds_S_led_3_P_gpios_IDX_0_VAL_pin
 #endif
 
-
-#define LED_RED        0
-#define LED_GREEN      1
-#define LED_BLUE       2
-#define LED_YELLOW     3
-#define LED_MAGENTA    4
-#define LED_CYAN       5
-#define LED_WHITE      6
-#define LED_OFF        7
+#define LED_OFF        0
+#define LED_RED        1
+#define LED_GREEN      2
+#define LED_BLUE       3
+#define LED_YELLOW     4
+#define LED_MAGENTA    5
+#define LED_CYAN       6
+#define LED_WHITE      7
 
 int led_init (void);
 
